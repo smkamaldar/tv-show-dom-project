@@ -6,12 +6,35 @@
     <title>TV Show Project | Elmira Kamaldar (smkamaldar)</title>
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <script src="https://kit.fontawesome.com/da4c9a3191.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,600;1,300&display=swap" rel="stylesheet">
+
   </head>
 
   <body>
-    <div id="root">
-    </div>
+    <section id="header-wrapper">
+      <div id="header">
+        <div id="header-logo">
+          <i class="fas fa-tv fa-5x "></i>
+          <h1>Tv Show</h1>
+        </div>
+        <h3>Episodes</h3>
+        
+        <div id="search-wrapper">
+        <input type="text" id="search" name="search" placeholder="Search" autocomplete="off">
+        <span id="result-count"></span>
+        </div>
+      </div>
+    </section>
+      <section id="episodes">
+        <ul id="cards">
+        
+        </ul>
 
+      </section>
+      <div id="source-wrapper">
+        <a  id="source" href="https://www.tvmaze.com/"> >>Source<<</a>
+      </div>
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
 
