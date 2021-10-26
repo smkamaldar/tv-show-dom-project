@@ -1,5 +1,6 @@
 //You can edit ALL of the code here
 const searchBox = document.getElementById("search");
+const list = document.getElementById("showlist")
 let allEpisodes = null;
 
 // runs once,only when page loads.
@@ -9,6 +10,7 @@ function setup() {
   // for first time we havent searched anything,so it means
   // we can pass allEpisodes array as a search result.(73/73)
   displayCount(allEpisodes);
+  makeShowList(allEpisodes)
 }
 
 // for search
@@ -41,6 +43,35 @@ function displayCount(searchedEpisodes) {
   displayCountEl.innerText = `Displaying ${searchedEpisodesLength}/${totalEpisodesLength} episodes`;
 }
 
+function createOne (episode){
+ 
+  const option=document.createElement("option")
+  let season = episode.season;
+  let number = episode.number;
+  let title = episode.name;
+  let result= ""
+  result += season < 10 ? `S0${season}` : `S${season}`;
+  result += number < 10 ? `E0${number}` : `E${number}`;
+  option.setAttribute("value", result)
+  option.innerText = result +`-${title}` 
+  console.log(option)
+  return  option
+}
+function makeShowList (allEpisodes){
+  allEpisodes.forEach(episode=>{
+    const option= createOne(episode)
+    list.appendChild(option)
+  })
+}
+
+list.addEventListener("change",e =>{
+  let value = e.target.value 
+  // this property will set the href value to point to an anchor
+  location.href = `#${value}`
+})
+
+
+
 function createEpisodeCard(episode) {
   const li = document.createElement("li");
   const cardTitleWrapper = document.createElement("div");
@@ -55,17 +86,23 @@ function createEpisodeCard(episode) {
   let season = episode.season;
   let number = episode.number;
   let title = episode.name;
-  title += season < 10 ? `-S0${season}` : `-S${season}`;
-  title += number < 10 ? `E0${number}` : `E${number}`;
-  episodeTitle.innerText = title;
+  // adding this variable cause later when user clicks on select options
+  // we expect page scroll down to the correspondent card
+  // so in this case card needs id equal to the value of the option.
+
+  let id = season < 10 ? `S0${season}` : `S${season}`;
+  id +=number < 10 ? `E0${number}` : `E${number}`;
+  episodeTitle.innerText = title + "-"+ id ;
+  li.setAttribute("id",id)
 
   image.setAttribute("class", "card-img");
   image.setAttribute("src", episode.image.medium);
+
   description.setAttribute("class", "card-desc");
   description.innerHTML = episode.summary;
 
-  li.appendChild(cardTitleWrapper);
   cardTitleWrapper.appendChild(episodeTitle);
+  li.appendChild(cardTitleWrapper);
   li.appendChild(image);
   li.appendChild(description);
   return li;

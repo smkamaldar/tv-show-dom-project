@@ -24,7 +24,7 @@ body {
 #search {
   font-size: 20px;
   margin-right: 10px;
-  padding: 5px;
+  padding: 3px;
   width: 150px;
   border-radius: 15px;
   transition: all 0.2s ease-in-out;
@@ -32,6 +32,13 @@ body {
 
 #search:focus {
   width: 250px;
+}
+
+#showlist {
+  margin-right: 10px;
+  padding: 5px;
+  width: 250px;
+  border-radius: 15px;
 }
 
 #episodes {
