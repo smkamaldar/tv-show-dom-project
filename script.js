@@ -1,6 +1,6 @@
 //You can edit ALL of the code here
 const searchBox = document.getElementById("search");
-const list = document.getElementById("showlist")
+const list = document.getElementById("showlist");
 let allEpisodes = null;
 
 // runs once,only when page loads.
@@ -10,7 +10,7 @@ function setup() {
   // for first time we havent searched anything,so it means
   // we can pass allEpisodes array as a search result.(73/73)
   displayCount(allEpisodes);
-  makeShowList(allEpisodes)
+  makeShowList(allEpisodes);
 }
 
 // for search
@@ -43,34 +43,35 @@ function displayCount(searchedEpisodes) {
   displayCountEl.innerText = `Displaying ${searchedEpisodesLength}/${totalEpisodesLength} episodes`;
 }
 
-function createOne (episode){
- 
-  const option=document.createElement("option")
+function concatinateSeasonAndNumber(episode) {
   let season = episode.season;
   let number = episode.number;
-  let title = episode.name;
-  let result= ""
+  let result = "";
   result += season < 10 ? `S0${season}` : `S${season}`;
   result += number < 10 ? `E0${number}` : `E${number}`;
-  option.setAttribute("value", result)
-  option.innerText = result +`-${title}` 
-  console.log(option)
-  return  option
-}
-function makeShowList (allEpisodes){
-  allEpisodes.forEach(episode=>{
-    const option= createOne(episode)
-    list.appendChild(option)
-  })
+  return result;
 }
 
-list.addEventListener("change",e =>{
-  let value = e.target.value 
+function createOption(episode) {
+  const option = document.createElement("option");
+  let value = concatinateSeasonAndNumber(episode);
+  option.setAttribute("value", value);
+  option.innerText = value + `-${episode.name}`;
+  return option;
+}
+
+function makeShowList(allEpisodes) {
+  allEpisodes.forEach((episode) => {
+    const option = createOption(episode);
+    list.appendChild(option);
+  });
+}
+
+list.addEventListener("change", (e) => {
+  let value = e.target.value;
   // this property will set the href value to point to an anchor
-  location.href = `#${value}`
-})
-
-
+  location.href = `#${value}`;
+});
 
 function createEpisodeCard(episode) {
   const li = document.createElement("li");
@@ -83,17 +84,14 @@ function createEpisodeCard(episode) {
   cardTitleWrapper.setAttribute("class", "card-title-wrapper");
 
   episodeTitle.setAttribute("class", "episode-title");
-  let season = episode.season;
-  let number = episode.number;
-  let title = episode.name;
+
   // adding this variable cause later when user clicks on select options
   // we expect page scroll down to the correspondent card
   // so in this case card needs id equal to the value of the option.
 
-  let id = season < 10 ? `S0${season}` : `S${season}`;
-  id +=number < 10 ? `E0${number}` : `E${number}`;
-  episodeTitle.innerText = title + "-"+ id ;
-  li.setAttribute("id",id)
+  let id = concatinateSeasonAndNumber(episode);
+  li.setAttribute("id", id);
+  episodeTitle.innerText = episode.name + "-" + id;
 
   image.setAttribute("class", "card-img");
   image.setAttribute("src", episode.image.medium);
