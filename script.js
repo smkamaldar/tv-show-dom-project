@@ -29,7 +29,8 @@ searchBox.addEventListener("keyup", (e) => {
 
 function search(phrase, episodes) {
   const filteredEpisodes = episodes.filter((episode) => {
-    return episode.name.includes(phrase) || episode.summary.includes(phrase);
+    const {name,summary} = episode ;
+    return name.includes(phrase) || summary.includes(phrase);
   });
   return filteredEpisodes;
 }
@@ -44,8 +45,8 @@ function displayCount(searchedEpisodes) {
 }
 
 function concatinateSeasonAndNumber(episode) {
-  let season = episode.season;
-  let number = episode.number;
+  //  unpacking, when I want property from a object we can create a variable like this.
+  const {season,number} = episode ; 
   let result = "";
   result += season < 10 ? `S0${season}` : `S${season}`;
   result += number < 10 ? `E0${number}` : `E${number}`;
