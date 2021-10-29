@@ -21,7 +21,7 @@ function setup() {
 // then call makePageForEpisodes function with filtered array
 // The display should update immediately after each keystroke changes the input.using keyup
 searchBox.addEventListener("keyup", (e) => {
-  let searchPhrase = e.target.value;
+  let searchPhrase = e.target.value.toLowerCase();
   let searchResult = search(searchPhrase, allEpisodes);
   makePageForEpisodes(searchResult);
   displayCount(searchResult);
@@ -30,7 +30,7 @@ searchBox.addEventListener("keyup", (e) => {
 function search(phrase, episodes) {
   const filteredEpisodes = episodes.filter((episode) => {
     const {name,summary} = episode ;
-    return name.includes(phrase) || summary.includes(phrase);
+    return name.toLowerCase().includes(phrase) || summary.toLowerCase().includes(phrase);
   });
   return filteredEpisodes;
 }
