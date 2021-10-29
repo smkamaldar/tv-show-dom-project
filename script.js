@@ -80,6 +80,7 @@ function createEpisodeCard(episode) {
   const episodeTitle = document.createElement("p");
   const image = document.createElement("img");
   const description = document.createElement("p");
+  const link= document.createElement("a");
 
   li.setAttribute("class", "card");
   cardTitleWrapper.setAttribute("class", "card-title-wrapper");
@@ -100,10 +101,16 @@ function createEpisodeCard(episode) {
   description.setAttribute("class", "card-desc");
   description.innerHTML = episode.summary;
 
+  link.setAttribute("class","imageLink")
+  link.href = episode.url ;
+  link.innerText = "Watch me";
+ 
+ 
   cardTitleWrapper.appendChild(episodeTitle);
   li.appendChild(cardTitleWrapper);
   li.appendChild(image);
   li.appendChild(description);
+  li.appendChild(link);
   return li;
 }
 
