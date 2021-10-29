@@ -72,6 +72,11 @@ list.addEventListener("change", (e) => {
   let value = e.target.value;
   // this property will set the href value to point to an anchor
   location.href = `#${value}`;
+  let selectedCard = document.getElementById(value); 
+  selectedCard.classList.add("card--active");
+  setTimeout(()=>{
+      selectedCard.classList.remove("card--active")
+  },2000)
 });
 
 function createEpisodeCard(episode) {
