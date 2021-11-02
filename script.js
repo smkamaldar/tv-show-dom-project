@@ -5,13 +5,27 @@ let allEpisodes = null;
 
 // runs once,only when page loads.
 function setup() {
-  allEpisodes = getAllEpisodes();
+ getEpisodes().then(data=>{
+  allEpisodes = data
   makePageForEpisodes(allEpisodes);
   // for first time we havent searched anything,so it means
   // we can pass allEpisodes array as a search result.(73/73)
   displayCount(allEpisodes);
-  makeShowList(allEpisodes);
+  makeShowList(allEpisodes)
+ })
 }
+
+// I need to get my data from API,beacuse promise is an async function
+// so it goes to the next line.
+// but still we doesnt have any data 
+// for solving that I need to do the second promise in my setup function
+
+function getEpisodes(){
+  const endpoint = "https://api.tvmaze.com/shows/82/episodes"
+ return fetch(endpoint)
+  .then(response=> response.json()) 
+}
+
 
 // for search
 // first I need to create input search in my html
