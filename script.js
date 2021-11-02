@@ -59,7 +59,7 @@ function displayCount(searchedEpisodes) {
 }
 
 function concatinateSeasonAndNumber(episode) {
-  //  unpacking, when I want property from a object we can create a variable like this.
+  //  unpacking, when I want property from an object we can create a variable like this.
   const {season,number} = episode ; 
   let result = "";
   result += season < 10 ? `S0${season}` : `S${season}`;
@@ -69,9 +69,9 @@ function concatinateSeasonAndNumber(episode) {
 
 function createOption(episode) {
   const option = document.createElement("option");
-  let value = concatinateSeasonAndNumber(episode);
-  option.setAttribute("value", value);
-  option.innerText = value + `-${episode.name}`;
+  option.setAttribute("value", episode.id);
+  let title = concatinateSeasonAndNumber(episode);
+  option.innerText = title + `-${episode.name}`;
   return option;
 }
 
@@ -110,9 +110,9 @@ function createEpisodeCard(episode) {
   // we expect page scroll down to the correspondent card
   // so in this case card needs id equal to the value of the option.
 
-  let id = concatinateSeasonAndNumber(episode);
-  li.setAttribute("id", id);
-  episodeTitle.innerText = episode.name + "-" + id;
+  li.setAttribute("id", episode.id);
+  let title = concatinateSeasonAndNumber(episode);
+  episodeTitle.innerText = episode.name + "-" + title;
 
   image.setAttribute("class", "card-img");
   image.setAttribute("src", episode.image.medium);
