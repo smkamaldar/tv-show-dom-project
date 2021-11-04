@@ -1,18 +1,18 @@
 //You can edit ALL of the code here
 const searchBox = document.getElementById("search");
-const list = document.getElementById("showlist");
+const episodesDropdwon = document.getElementById("showlist");
+const showsDropdown = document.getElementById("allshows")
 let allEpisodes = null;
+let allShows = null;
 
 // runs once,only when page loads.
 function setup() {
- getEpisodes().then(data=>{
-  allEpisodes = data
-  makePageForEpisodes(allEpisodes);
-  // for first time we havent searched anything,so it means
-  // we can pass allEpisodes array as a search result.(73/73)
-  displayCount(allEpisodes);
-  makeShowList(allEpisodes)
- })
+  allShows = getAllShows();
+  const sortedAllShows = allShows.sort((a,b)=>{
+   return a.name < b.name ? -1 : 1
+  })
+  createShowsDropdownOptions(sortedAllShows);
+  populateCards(sortedAllShows)
 }
 
 // I need to get my data from API,beacuse promise is an async function
@@ -20,8 +20,8 @@ function setup() {
 // but still we doesnt have any data 
 // for solving that I need to do the second promise in my setup function
 
-function getEpisodes(){
-  const endpoint = "https://api.tvmaze.com/shows/82/episodes"
+function getEpisodes(showId){
+  const endpoint = `https://api.tvmaze.com/shows/${showId}/episodes`
  return fetch(endpoint)
   .then(response=> response.json()) 
 }
@@ -32,12 +32,12 @@ function getEpisodes(){
 // then I need a refrence to it
 // so whenever I type in input box,I need to listen to it
 // then filter the list with the value of the input against name OR summary fields
-// then call makePageForEpisodes function with filtered array
+// then call populateCards function with filtered array
 // The display should update immediately after each keystroke changes the input.using keyup
-searchBox.addEventListener("keyup", (e) => {
+searchBox.addEventListener("input", (e) => {
   let searchPhrase = e.target.value.toLowerCase();
   let searchResult = search(searchPhrase, allEpisodes);
-  makePageForEpisodes(searchResult);
+  populateCards(searchResult);
   displayCount(searchResult);
 });
 
@@ -58,6 +58,11 @@ function displayCount(searchedEpisodes) {
   displayCountEl.innerText = `Displaying ${searchedEpisodesLength}/${totalEpisodesLength} episodes`;
 }
 
+function removeDisplatCount(){
+  const displayCountEl = document.getElementById("result-count");
+  displayCountEl.innerText = ""
+}
+
 function concatinateSeasonAndNumber(episode) {
   //  unpacking, when I want property from an object we can create a variable like this.
   const {season,number} = episode ; 
@@ -67,6 +72,41 @@ function concatinateSeasonAndNumber(episode) {
   return result;
 }
 
+
+function createOptionForShowList(episode){
+const option = document.createElement("option")
+option.setAttribute("value", episode.id)
+option.innerText = episode.name
+return option
+}
+
+function createShowsDropdownOptions (allEpisodes){
+  showsDropdown.appendChild(createOptionForShowList({name:"all shows", id:"all"}))
+  allEpisodes.forEach(episode =>{
+    const option= createOptionForShowList(episode)
+    showsDropdown.appendChild(option)
+  })
+}
+
+showsDropdown.addEventListener("change",e =>{
+  let showId = e.target.value ;
+  // location.href = `#${value}`
+  if(showId === "all"){
+    populateCards(allShows);
+    removeDisplatCount()
+    makeEpisodeList([]);
+  }else{
+    getEpisodes(showId).then(data=>{
+    allEpisodes = data
+    populateCards(allEpisodes);
+    // for first time we havent searched anything,so it means
+    // we can pass allEpisodes array as a search result.(73/73)
+    displayCount(allEpisodes);
+    makeEpisodeList(allEpisodes);
+ })
+  }
+})
+
 function createOption(episode) {
   const option = document.createElement("option");
   option.setAttribute("value", episode.id);
@@ -75,15 +115,17 @@ function createOption(episode) {
   return option;
 }
 
-function makeShowList(allEpisodes) {
+function makeEpisodeList(allEpisodes) {
+  episodesDropdwon.innerHTML= ""
   allEpisodes.forEach((episode) => {
     const option = createOption(episode);
-    list.appendChild(option);
+    episodesDropdwon.appendChild(option);
   });
 }
 
-list.addEventListener("change", (e) => {
+episodesDropdwon.addEventListener("change", (e) => {
   let value = e.target.value;
+  console.log(value)
   // this property will set the href value to point to an anchor
   location.href = `#${value}`;
   let selectedCard = document.getElementById(value); 
@@ -115,7 +157,7 @@ function createEpisodeCard(episode) {
   episodeTitle.innerText = episode.name + "-" + title;
 
   image.setAttribute("class", "card-img");
-  image.setAttribute("src", episode.image.medium);
+  image.setAttribute("src",  episode.image ? episode.image.medium: "");
 
   description.setAttribute("class", "card-desc");
   description.innerHTML = episode.summary;
@@ -134,12 +176,12 @@ function createEpisodeCard(episode) {
 }
 
 // to clear all cards from the DOM. inorder to add new cards.
-// this function need to be called inside  makePageForEpisodes function
+// this function need to be called inside  populateCards function
 function clearCards(ul) {
   ul.innerHTML = "";
 }
 
-function makePageForEpisodes(episodeList) {
+function populateCards(episodeList) {
   const ul = document.getElementById("cards");
   clearCards(ul);
   episodeList.forEach((episode) => {
