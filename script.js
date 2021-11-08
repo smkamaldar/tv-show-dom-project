@@ -12,7 +12,7 @@ function setup() {
    return a.name < b.name ? -1 : 1
   })
   createShowsDropdownOptions(sortedAllShows);
-  populateCards(sortedAllShows)
+  populateCards(sortedAllShows,"show")
 }
 
 // I need to get my data from API,beacuse promise is an async function
@@ -92,7 +92,7 @@ showsDropdown.addEventListener("change",e =>{
   let showId = e.target.value ;
   // location.href = `#${value}`
   if(showId === "all"){
-    populateCards(allShows);
+    populateCards(allShows,"show");
     removeDisplatCount()
     makeEpisodeList([]);
   }else{
@@ -135,7 +135,7 @@ episodesDropdwon.addEventListener("change", (e) => {
   },2000)
 });
 
-function createEpisodeCard(episode) {
+function createCard(episode,type) {
   const li = document.createElement("li");
   const cardTitleWrapper = document.createElement("div");
   const episodeTitle = document.createElement("p");
@@ -153,8 +153,13 @@ function createEpisodeCard(episode) {
   // so in this case card needs id equal to the value of the option.
 
   li.setAttribute("id", episode.id);
-  let title = concatinateSeasonAndNumber(episode);
-  episodeTitle.innerText = episode.name + "-" + title;
+  if (type !== "show") {
+    let title = concatinateSeasonAndNumber(episode);
+    episodeTitle.innerText = episode.name + "-" + title;
+  } else {
+    episodeTitle.innerText = episode.name;
+  }
+  
 
   image.setAttribute("class", "card-img");
   image.setAttribute("src",  episode.image ? episode.image.medium: "");
@@ -181,11 +186,11 @@ function clearCards(ul) {
   ul.innerHTML = "";
 }
 
-function populateCards(episodeList) {
+function populateCards(episodeList,type) {
   const ul = document.getElementById("cards");
   clearCards(ul);
   episodeList.forEach((episode) => {
-    const li = createEpisodeCard(episode);
+    const li = createCard(episode,type);
     ul.appendChild(li);
   });
 }
